@@ -62,6 +62,8 @@ int main(int argc, char *argv[])
             int r, c;
             ss >> r >> c;
 
+            cout << "\n";
+
             int n;
             while (ss >> n)
             {
