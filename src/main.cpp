@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 
     // Game loop (keeps track of whether player used solve() to make fun of them later).
     bool usedSolver = false;
-    while (!game.done())
+    while (!game.status())
     {
         game.print();
 
@@ -115,12 +115,16 @@ int main(int argc, char *argv[])
     }
 
     game.print();
-    if (game.done()) // Makes no distinction between win or lose yet.
+    if (game.status() == 1)
     {
         if (usedSolver)
-            cout << "used solver... fool..." << endl;
+            cout << "used solver... fool...\n";
         else
-            cout << "you won!! lmao" << endl;
+            cout << "you won!! lmao\n";
+    }
+    else if (game.status() == -1)
+    {
+        cout << "you lose!!!!!!!!\n";
     }
     cout << "ok bye" << endl;
 }

@@ -14,7 +14,7 @@ private:
     std::vector<std::vector<int>> solvedBoard_;
     std::unordered_map<int, std::unordered_set<int>> notes_;
     int numEmpty_;
-    bool playable_;
+    int status_;
     int fails;
 
     // internal functions
@@ -36,7 +36,7 @@ public:
     void addNote(int r, int c, int note);
     void removeNote(int r, int c, int note);
     void printNotes(int r, int c);
-    bool done() const;
+    int status() const;
 };
 
 #endif

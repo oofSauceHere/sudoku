@@ -43,7 +43,7 @@ bool Sudoku::checkPlacement(int r, int c, int n) const
 
 bool Sudoku::validPlacement(int r, int c, int n) const
 {
-    if (!playable_)
+    if (status_ != 0)
     {
         cout << "The game has either finished or has not been started.\n";
         return false;
@@ -67,7 +67,7 @@ bool Sudoku::validPlacement(int r, int c, int n) const
 }
 
 // helper() fills a board with valid placements and returns whether a solution exists or not.
-bool Sudoku::helper(int index)
+bool Sudoku::helper(int index) // Consider including time so we can break the loop if it's taking too long.
 {
     // All empty spots have been considered so we're done.
     if (index > 80)
@@ -146,7 +146,7 @@ int Sudoku::helper2(int index)
 // constructor
 Sudoku::Sudoku() : board_(9, vector<int>(9, 0)), solvedBoard_(9, vector<int>(9, 0))
 {
-    playable_ = false;
+    status_ = 0;
     numEmpty_ = 81;
     fails = 5;
 }
@@ -192,7 +192,7 @@ bool Sudoku::generate()
             return true;
     }
 
-    playable_ = true;
+    status_ = 0;
     return false;
 }
 
@@ -205,12 +205,11 @@ void Sudoku::reset()
             board_[i][j] = 0;
         }
     }
-    playable_ = false;
 }
 
 void Sudoku::solve()
 {
-    if (!playable_)
+    if (status_ != 0)
     {
         cout << "The board is either completed or has not been generated.\n";
         return;
@@ -228,7 +227,7 @@ void Sudoku::solve()
     }
 
     numEmpty_ = 0;
-    playable_ = false;
+    status_ = 1;
 }
 
 void Sudoku::print() const
@@ -262,6 +261,8 @@ void Sudoku::place(int r, int c, int n)
     {
         fails--;
         cout << "Incorrect placement. Fails left: " << fails << ".\n";
+        if (fails == 0)
+            status_ = -1;
         return;
     }
 
@@ -297,9 +298,9 @@ void Sudoku::place(int r, int c, int n)
         }
     }
 
-    if (numEmpty_ == 0 || fails == 0)
+    if (numEmpty_ == 0)
     {
-        playable_ = false;
+        status_ = 1;
     }
 }
 
@@ -353,8 +354,8 @@ void Sudoku::printNotes(int r, int c)
     cout << (lastElem == -1 ? "" : to_string(lastElem)) << "]\n";
 }
 
-bool Sudoku::done() const
+int Sudoku::status() const
 {
-    // This can (and should) be more specific. Did the player win? Lose?
-    return !playable_;
+    // -1 = player lost, 0 = not done, 1 = player won
+    return status_;
 }
